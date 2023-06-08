@@ -1,18 +1,22 @@
 import yt_dlp
 
-# Prompt the user for the URL of the playlist
-playlist_url = input("Enter the URL of the YouTube playlist: ")
+def get_user_input(prompt):
+    return input(prompt)
 
-# Prompt the user for the directory to save the videos
-download_path = input("Enter the directory to save the videos: ")
+def download_playlist(playlist_url, download_path):
+    ydl_opts = {
+        'outtmpl': f'{download_path}/%(title)s.%(ext)s',
+        'merge_output_format': 'mp4',
+        'format': 'bestvideo[height<=2160]+bestaudio/best[height<=2160]',
+    }
 
-# Set the options for yt-dlp
-ydl_opts = {
-    'outtmpl': f'{download_path}/%(title)s.%(ext)s',
-    'merge_output_format': 'mp4',
-    'format': 'bestvideo[height<=2160]+bestaudio/best[height<=2160]',
-}
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([playlist_url])
 
-# Create a yt-dlp object for the playlist
-with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-    ydl.download([playlist_url])
+def main():
+    playlist_url = get_user_input("Enter the URL of the YouTube playlist: ")
+    download_path = get_user_input("Enter the directory to save the videos: ")
+    download_playlist(playlist_url, download_path)
+
+if __name__ == "__main__":
+    main()
